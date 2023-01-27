@@ -8,18 +8,20 @@ import { sequence } from '@sveltejs/kit/hooks';
 
 async function authorization({ event, resolve }) {
 	const session = await event.locals.getSession();
-	console.log('Checking Authorization');
+	console.log('session', session);
+	console.log('route', event?.route?.id)
 	// Protect any routes under /authenticated
-	if (event.route.id?.includes('/(authenticated)/' && !session?.user)) {
+	if (event?.route?.id?.includes('/(authenticated)/') && !session?.user) {
 		console.log('Auth Failed', event.route.id, session?.user);
 		throw error(401, 'Requires Authentication');
 	}
-
+	console.log('Auth Check Passed', event.route.id, session?.user);
 	// If the request is still here, just proceed as normally
-	const result = await resolve(event, {
+	// const result = await 
+	return resolve(event, {
 		transformPageChunk: ({ html }) => html
 	});
-	return result;
+	// return result;
 }
 
 const providers = [
@@ -45,8 +47,8 @@ const providers = [
 					.then((res) => res.json())
 					.then((res) => res.csrfToken);
 
-        console.log("nonce", nonce);
-        console.log("credentials", credentials);
+        // console.log("nonce", nonce);
+        // console.log("credentials", credentials);
 				const result = await siwe.verify({
 					signature: credentials?.signature || '',
 					domain: AuthUrl.host,

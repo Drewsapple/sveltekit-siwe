@@ -2,7 +2,7 @@
 	import Connector from "$lib/components/Connector.svelte";
     import { page } from '$app/stores';
 
-    console.log($page.data.session);
+    // console.log("session store", $page.data.session);
 </script>
 
 
